@@ -1,1 +1,13 @@
-# ToasterOvenSimulator
+Toaster Oven Simulator – Event-Driven Finite State Machine (FSM) on PIC32
+
+Author: Nikhil Thankasala  
+Overview:  
+This project simulates a digital toaster oven using an event-driven finite state machine (FSM) architecture on a PIC32 microcontroller. It features multiple cooking modes (Bake, Toast, Broil), a real-time OLED display for temperature and timer feedback, and LED progress indicators to visualize cooking status. The system responds to user input through buttons and a potentiometer, and behaves like a real appliance—with configurability, timing logic, and reactive behavior. All display updates and state changes are handled via structured event flags and ISR-safe practices.
+
+Implementation Details:  
+The main control logic is implemented within a single state machine (`runOvenSM()`), triggered by event flags set in hardware timer interrupts. System behavior is modeled through four states: SETUP, SELECTOR_CHANGE_PENDING, COOKING, and RESET_PENDING. Input handling includes short vs long presses on two buttons, as well as analog input from a potentiometer to control time and/or temperature. A `ToasterOvenState` struct tracks mode, current cook time, temp, selector position, and previous values for resetting. OLED rendering is handled through a dedicated `updateOvenOLED()` function that draws the oven’s graphical state in real time.
+
+During cooking, all 8 on-board LEDs function as a visual countdown timer. As time elapses, LEDs turn off sequentially every 1/8th of the total duration. Bake mode allows users to adjust both time and temperature; Toast adjusts only time; Broil has a fixed temp of 500°F. Configuration changes are made using a selector switch toggled with button holds. Cooking can be canceled early and returns to the previous settings cleanly. No floating-point math is used—ADC readings are scaled using integer math and bit manipulation for performance and portability.
+
+Outcome and Reflection:  
+The final implementation is responsive, readable, and modular. OLED updates are efficient, only triggered when necessary. Event flags ensure the main loop remains lightweight. All state transitions are robust, and inputs are debounced effectively. The system resets gracefully and preserves expected behavior across mode changes and early exits. Development time was approximately 12–14 hours, including testing, OLED formatting, and interrupt debugging. This project serves as a practical embedded systems exercise in FSM design, real-time input handling, and UI simulation on constrained hardware. Future expansions could include buzzer alerts, EEPROM state saving, or actual heating element control with PWM output.
