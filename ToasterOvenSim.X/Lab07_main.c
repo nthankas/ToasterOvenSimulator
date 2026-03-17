@@ -32,7 +32,6 @@ typedef enum {
 
 typedef struct {
     OvenState state;
-    //add more members to this struct
     int cookingTimeLeft;
     int initialCookTime;
     int temperature;
@@ -173,52 +172,8 @@ void runOvenSM(void)
         case COOKING: {
             elapsedTime = runningTime - startTime;
             initial1.cookingTimeLeft = initial1.initialCookTime - (elapsedTime / 5);
-//            double x8 = (double)(initial1.initialCookTime);
-//            double x7 = (7.0/8.0) * (double)(initial1.initialCookTime);
-//            double x6 = (6.0/8.0) * (double)(initial1.initialCookTime);
-//            double x5 = (5.0/8.0) * (double)(initial1.initialCookTime);
-//            double x4 = (4.0/8.0) * (double)(initial1.initialCookTime);
-//            double x3 = (3.0/8.0) * (double)(initial1.initialCookTime);
-//            double x2 = (2.0/8.0) * (double)(initial1.initialCookTime);
-//            double x1 = (1.0/8.0) * (double)(initial1.initialCookTime);
-//            double x0 = (0.0) * (double)(initial1.initialCookTime);
-//            
             if (initial1.cookingTimeLeft > 0) {
-//                if ((initial1.cookingTimeLeft / 5) >= x8) {
-//                    LEDS_SET(ledCount);
-//                }
-//                else if ((initial1.cookingTimeLeft / 5) >= x7) {
-//                    ledCount = ledCount << 1;
-//                    LEDS_SET(ledCount);
-//                }
-//                else if ((initial1.cookingTimeLeft / 5) >= x6) {
-//                    ledCount = ledCount << 1;
-//                    LEDS_SET(ledCount);
-//                }
-//                else if ((initial1.cookingTimeLeft / 5) >= x5) {
-//                    ledCount = ledCount << 1;
-//                    LEDS_SET(ledCount);
-//                }
-//                else if ((initial1.cookingTimeLeft / 5) >= x4) {
-//                    ledCount = ledCount << 1;
-//                    LEDS_SET(ledCount);
-//                }
-//                else if ((initial1.cookingTimeLeft / 5) >= x3) {
-//                    ledCount = ledCount << 1;
-//                    LEDS_SET(ledCount);
-//                }
-//                else if ((initial1.cookingTimeLeft / 5) >= x2) {
-//                    ledCount = ledCount << 1;
-//                    LEDS_SET(ledCount);
-//                }
-//                else if ((initial1.cookingTimeLeft / 5) >= x1) {
-//                    ledCount = ledCount << 1;
-//                    LEDS_SET(ledCount);
-//                }
-//                else if ((initial1.cookingTimeLeft / 5) == x0) {
-//                    ledCount = ledCount << 1;
-//                    LEDS_SET(ledCount);
-//                } 
+                // turn off one LED for each 1/8th of total cook time elapsed
                 if (((elapsedTime * 5 * 5 * 5) % 8) == 0) {
                     ledCount = ledCount >> 1;
                     LEDS_SET(ledCount);
@@ -279,7 +234,7 @@ int main()
     // </editor-fold>
     
    
-    printf("Welcome to CRUZID's Lab07 (Toaster Oven).  Compiled on %s %s.", __TIME__, __DATE__);
+    printf("Toaster Oven Simulator. Compiled on %s %s.", __TIME__, __DATE__);
 
     //initialize state machine (and anything else you need to init) here
     initial1.state = SETUP;
