@@ -1,13 +1,20 @@
-Toaster Oven Simulator – Event-Driven Finite State Machine (FSM) on PIC32
+# Toaster Oven Simulator
 
-Author: Nikhil Thankasala  
-Overview:  
-This project simulates a digital toaster oven using an event-driven finite state machine (FSM) architecture on a PIC32 microcontroller. It features multiple cooking modes (Bake, Toast, Broil), a real-time OLED display for temperature and timer feedback, and LED progress indicators to visualize cooking status. The system responds to user input through buttons and a potentiometer, and behaves like a real appliance—with configurability, timing logic, and reactive behavior. All display updates and state changes are handled via structured event flags and ISR-safe practices.
+Event-driven FSM simulation of a digital toaster oven on PIC32. Three cooking modes (Bake/Toast/Broil) with real-time OLED display, LED countdown bar, and potentiometer-based time/temperature input.
 
-Implementation Details:  
-The main control logic is implemented within a single state machine (`runOvenSM()`), triggered by event flags set in hardware timer interrupts. System behavior is modeled through four states: SETUP, SELECTOR_CHANGE_PENDING, COOKING, and RESET_PENDING. Input handling includes short vs long presses on two buttons, as well as analog input from a potentiometer to control time and/or temperature. A `ToasterOvenState` struct tracks mode, current cook time, temp, selector position, and previous values for resetting. OLED rendering is handled through a dedicated `updateOvenOLED()` function that draws the oven’s graphical state in real time.
+## Architecture
 
-During cooking, all 8 on-board LEDs function as a visual countdown timer. As time elapses, LEDs turn off sequentially every 1/8th of the total duration. Bake mode allows users to adjust both time and temperature; Toast adjusts only time; Broil has a fixed temp of 500°F. Configuration changes are made using a selector switch toggled with button holds. Cooking can be canceled early and returns to the previous settings cleanly. No floating-point math is used—ADC readings are scaled using integer math and bit manipulation for performance and portability.
+- **FSM states**: SETUP, SELECTOR_CHANGE_PENDING, COOKING, RESET_PENDING
+- **Inputs**: BTN3 (mode cycle / selector toggle via short/long press), BTN4 (start cooking / cancel via long press), potentiometer (ADC for time or temp)
+- **Display**: OLED shows current mode, time remaining (MM:SS), and temperature. 8 LEDs turn off sequentially as cooking progresses (one per 1/8th of total duration)
+- **Timers**: Timer2 at 100Hz polls buttons and ADC. Timer3 at 5Hz drives the cooking countdown and state machine ticks
 
-Outcome and Reflection:  
-The final implementation is responsive, readable, and modular. OLED updates are efficient, only triggered when necessary. Event flags ensure the main loop remains lightweight. All state transitions are robust, and inputs are debounced effectively. The system resets gracefully and preserves expected behavior across mode changes and early exits. Development time was approximately 12–14 hours, including testing, OLED formatting, and interrupt debugging. This project serves as a practical embedded systems exercise in FSM design, real-time input handling, and UI simulation on constrained hardware. Future expansions could include buzzer alerts, EEPROM state saving, or actual heating element control with PWM output.
+## Cooking Modes
+
+- **Bake**: adjustable time + temperature (300-555F via ADC). Selector toggles between time and temp
+- **Toast**: adjustable time only, no temp display
+- **Broil**: fixed 500F, adjustable time only
+
+## Target
+
+PIC32MX795F512H. Build with MPLAB X -- open `ToasterOvenSim.X/`.
